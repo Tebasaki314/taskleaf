@@ -16,7 +16,7 @@ describe 'タスク管理機能', type: :system do
     it { expect(page).to have_content '最初のタスク' }
   end
 
-  describe '一覧機能表示' do
+  describe '一覧表示機能' do
     context 'ユーザーAがログインしている時' do
       let(:login_user) { user_a }
 
@@ -46,27 +46,41 @@ describe 'タスク管理機能', type: :system do
 
   describe '新規作成機能' do
     let(:login_user) { user_a }
+    let(:task_name) { '新規作成のテストを書く' }
 
     before do
       visit new_task_path
       fill_in '名称', with: task_name
-      click_button '登録する'
+      click_button '確認'
     end
 
-    context '新規作成画面で名称を入力した時' do
-      let(:task_name) { '新規作成のテストを書く' }
-
-      it '正常に登録される' do
-        expect(page).to have_selector '.alert-success', text: '新規作成のテストを書く'
+    describe '確認画面表示機能' do
+      context '新規作成画面で名称を入力した時' do
+        it '確認画面が表示される' do
+          expect(page).to have_content '登録内容の確認'
+          expect(page).to have_content '新規作成のテストを書く'
+        end
       end
-    end
     
-    context '新規作成画面で名称を入力しなかった時' do
-      let(:task_name) { '' }
+      context '新規作成画面で名称を入力しなかった時' do
+        let(:task_name) { '' }
 
-      it 'エラーとなる' do
-        within '#error_explanation' do
-          expect(page).to have_content '名称を入力してください'
+        it 'エラーとなる' do
+          within '#error_explanation' do
+            expect(page).to have_content '名称を入力してください'
+          end
+        end
+      end
+
+      describe '新規登録機能' do
+        before do
+          click_button '登録'
+        end
+
+        context '登録ボタンを押した時' do
+          it '正常に登録される' do
+            expect(page).to have_selector '.alert-success', text: '新規作成のテストを書く'
+          end
         end
       end
     end
