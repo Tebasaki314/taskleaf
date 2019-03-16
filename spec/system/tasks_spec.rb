@@ -51,14 +51,13 @@ describe 'タスク管理機能', type: :system do
     before do
       visit new_task_path
       fill_in '名称', with: task_name
-      click_button '確認'
+      click_button '登録する'
     end
 
     describe '確認画面表示機能' do
       context '新規作成画面で名称を入力した時' do
-        it '確認画面が表示される' do
-          expect(page).to have_content '登録内容の確認'
-          expect(page).to have_content '新規作成のテストを書く'
+        it '正常に登録される' do
+          expect(page).to have_selector '.alert-success', text: '新規作成のテストを書く'
         end
       end
     
@@ -68,18 +67,6 @@ describe 'タスク管理機能', type: :system do
         it 'エラーとなる' do
           within '#error_explanation' do
             expect(page).to have_content '名称を入力してください'
-          end
-        end
-      end
-
-      describe '新規登録機能' do
-        before do
-          click_button '登録'
-        end
-
-        context '登録ボタンを押した時' do
-          it '正常に登録される' do
-            expect(page).to have_selector '.alert-success', text: '新規作成のテストを書く'
           end
         end
       end
